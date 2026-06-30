@@ -70,20 +70,29 @@ class ContactAddPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         }
 
         val data = java.util.ArrayList<ContentValues>()
-        if (contact.containsKey("company")) {
-            val company = ContentValues()
-            company.put(
+
+        val companyVal = contact["company"]
+        val titleVal = contact["title"]
+        if (companyVal != null || titleVal != null) {
+            val org = ContentValues()
+            org.put(
                 ContactsContract.Data.MIMETYPE,
                 CommonDataKinds.Organization.CONTENT_ITEM_TYPE
             )
-            company.put(CommonDataKinds.Organization.COMPANY, contact["company"])
-            data.add(company)
+            if (companyVal != null) {
+                org.put(CommonDataKinds.Organization.COMPANY, companyVal)
+            }
+            if (titleVal != null) {
+                org.put(CommonDataKinds.Organization.TITLE, titleVal)
+            }
+            data.add(org)
         }
-        if (contact.containsKey("email")) {
+
+        val emailVal = contact["email"]
+        if (emailVal != null) {
             val email = ContentValues()
             email.put(ContactsContract.Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
-            email.put(Email.TYPE, Email.TYPE_HOME)
-            email.put(Email.ADDRESS, contact["email"])
+            email.put(Email.ADDRESS, emailVal)
             data.add(email)
         }
 
@@ -106,12 +115,40 @@ class ContactAddPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             data.add(name)
         }
 
-        if (contact.containsKey("phone")) {
+        val phoneVal = contact["phone"]
+        if (phoneVal != null) {
             val phone = ContentValues()
             phone.put(ContactsContract.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-            phone.put(Phone.NUMBER, contact["phone"])
+            phone.put(Phone.NUMBER, phoneVal)
             data.add(phone)
         }
+
+        val urlVal = contact["url"]
+        if (urlVal != null) {
+            val url = ContentValues()
+            url.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.Website.CONTENT_ITEM_TYPE)
+            url.put(CommonDataKinds.Website.URL, urlVal)
+            url.put(CommonDataKinds.Website.TYPE, CommonDataKinds.Website.TYPE_HOMEPAGE)
+            data.add(url)
+        }
+
+        val addressVal = contact["address"]
+        if (addressVal != null) {
+            val addr = ContentValues()
+            addr.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE)
+            addr.put(CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS, addressVal)
+            addr.put(CommonDataKinds.StructuredPostal.STREET, addressVal)
+            data.add(addr)
+        }
+
+        val noteVal = contact["note"]
+        if (noteVal != null) {
+            val note = ContentValues()
+            note.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.Note.CONTENT_ITEM_TYPE)
+            note.put(CommonDataKinds.Note.NOTE, noteVal)
+            data.add(note)
+        }
+
         val intent = Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI)
         intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, data)
 

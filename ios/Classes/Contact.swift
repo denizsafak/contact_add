@@ -29,10 +29,34 @@ public class Contact: NSObject {
         }
 
         if let email = data["email"] as? String {
-            let emailAddress = CNLabeledValue<NSString>(label: CNLabelHome, value: email as NSString)
+            let emailAddress = CNLabeledValue<NSString>(label: "", value: email as NSString)
 
             // Add the email address to the contact
             contact.emailAddresses = [emailAddress]
+        }
+
+        // Website URL
+        if let url = data["url"] as? String {
+            let urlLabel = CNLabeledValue<NSString>(label: CNLabelURLAddressHomePage, value: url as NSString)
+            contact.urlAddresses = [urlLabel]
+        }
+
+        // Job title
+        if let title = data["title"] as? String {
+            contact.jobTitle = title
+        }
+
+        // Street address
+        if let address = data["address"] as? String {
+            let addr = CNMutablePostalAddress()
+            addr.street = address
+            let addrLabel = CNLabeledValue<CNPostalAddress>(label: "", value: addr)
+            contact.postalAddresses = [addrLabel]
+        }
+
+        // Notes (vCard NOTE field)
+        if let note = data["note"] as? String {
+            contact.note = note
         }
 
         return contact;

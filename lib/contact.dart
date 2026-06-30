@@ -17,9 +17,30 @@ class Contact {
   /// The primary E-Mail address to prefill in the new contact
   String? email;
 
+  /// Website URL to prefill in the new contact
+  String? url;
+
+  /// Job title to prefill in the new contact
+  String? title;
+
+  /// Street address to prefill in the new contact
+  String? address;
+
+  /// Notes to prefill in the new contact (vCard/NOTE field)
+  String? note;
+
   /// Constructor allows filling all possible properties
-  Contact(
-      {this.firstname, this.lastname, this.company, this.phone, this.email});
+  Contact({
+    this.firstname,
+    this.lastname,
+    this.company,
+    this.phone,
+    this.email,
+    this.url,
+    this.title,
+    this.address,
+    this.note,
+  });
 
   /// Converts the contact to a map
   ///
@@ -31,6 +52,10 @@ class Contact {
       'company': company,
       'phone': phone,
       'email': email,
+      'url': url,
+      'title': title,
+      'address': address,
+      'note': note,
     };
   }
 }
